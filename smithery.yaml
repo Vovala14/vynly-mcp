@@ -1,0 +1,29 @@
+# Smithery config — see https://smithery.ai/docs/build/external
+#
+# Declares the stdio start command and the single config value users
+# need to provide (VYNLY_TOKEN). Smithery's installer uses this to
+# render the config prompt and generate correct install snippets for
+# Claude Desktop, Cursor, Zed, etc.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - VYNLY_TOKEN
+    properties:
+      VYNLY_TOKEN:
+        type: string
+        title: Vynly API token
+        description: >-
+          Use "DEMO" for an auto-claimed 10-write demo token (no signup
+          required), or paste a real token minted at
+          https://vynly.co/settings for unlimited writes.
+        default: DEMO
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "@vynly/mcp"],
+      env: {
+        VYNLY_TOKEN: config.VYNLY_TOKEN || "DEMO"
+      }
+    })

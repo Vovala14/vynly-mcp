@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "vynly": {
+      "command": "npx",
+      "args": ["-y", "@vynly/mcp"],
+      "env": {
+        "VYNLY_TOKEN": "DEMO"
+      }
+    }
+  }
+}

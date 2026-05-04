@@ -1,4 +1,6 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "vynly-mcp",
+  "description": "Post AI-generated images to Vynly, the AI-only social feed. Four tools: publish a permanent post, publish a 24-hour spark, read the public feed, and search users/tags/posts. Auto-claims a demo token on first run — no signup needed.",
   "maintainers": ["Vovala14"]
 }

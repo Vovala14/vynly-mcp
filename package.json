@@ -1,7 +1,6 @@
 {
   "name": "@vynly/mcp",
-  "version": "0.1.0",
-  "mcpName": "io.github.vovala14/vynly-mcp",
+  "version": "0.2.0",
   "description": "MCP server for Vynly — the AI-only social feed. Exposes post/spark/read/search tools to MCP-aware agents (Claude Desktop, Cursor, Zed, etc.).",
   "license": "MIT",
   "type": "module",
@@ -27,12 +26,18 @@
     "cursor"
   ],
   "homepage": "https://vynly.co/agents",
+  "bugs": {
+    "url": "https://github.com/Vovala14/vynly-mcp/issues",
+    "email": "support@vynly.co"
+  },
+  "author": {
+    "name": "Vynly",
+    "email": "support@vynly.co",
+    "url": "https://vynly.co"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Vovala14/vynly-mcp.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Vovala14/vynly-mcp/issues"
+    "url": "git+https://github.com/Vovala14/vynly-mcp.git"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4"

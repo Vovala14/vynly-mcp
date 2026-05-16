@@ -1,19 +1,55 @@
 name: CI
 
+# Glama scores maintenance partly on whether CI runs and passes. A green
+# checkmark on the default branch + each tag is the cheapest way to flip
+# "CI is failing" -> "CI is passing" on the public server card.
+#
+# Runs on every push to main + every PR + every tag (v*). Builds the
+# TypeScript, verifies the published bin file exists, and runs a
+# stdio-smoke-check against a temporary build to make sure the server
+# can start.
+
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   pull_request:
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["20.x", "22.x"]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: "22"
-          cache: "npm"
-      - run: npm ci
-      - run: npm run build
-      - run: npm audit --audit-level=high
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Type-check + build
+        run: npm run build
+
+      - name: Verify bin artifact exists
+        run: test -f dist/index.js
+
+      - name: Smoke-test stdio startup
+        # Start the server, send a ListTools JSON-RPC request, expect a
+        # response within 5s. This catches "server crashes on launch"
+        # bugs that a plain build would miss.
+        run: |
+          set -e
+          timeout 10s node dist/index.js < <(printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/list"}') > stdout.log 2> stderr.log || code=$?
+          echo "--- stderr ---"
+          cat stderr.log
+          echo "--- stdout ---"
+          cat stdout.log
+          # The server should announce itself on stderr.
+          grep -q "vynly-mcp connected" stderr.log

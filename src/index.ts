@@ -58,6 +58,15 @@ type PostArgs = {
   declaredSource?: string;
   width?: number;
   height?: number;
+  /**
+   * Carousel extras (optional). Up to 9 additional images beyond the
+   * cover. Any combination of path/url/base64 sources is allowed; each
+   * item is sent as a separate multipart file (`image2`, `image3`, …)
+   * the server saves to Vercel Blob and adds to the carousel.
+   */
+  extraImagePaths?: string[];
+  extraImageUrls?: string[];
+  extraImageBase64?: string[];
 };
 
 async function loadImageBytes(
@@ -115,6 +124,46 @@ async function postMultipart(
   if (args.declaredSource) fd.append("declaredSource", args.declaredSource);
   if (args.width) fd.append("width", String(args.width));
   if (args.height) fd.append("height", String(args.height));
+
+  // Carousel extras (posts only — sparks stay single-image). Combine
+  // any path/url/base64 sources into a flat list and attach as
+  // image2…image10. Server enforces a cap of 9 extras; we mirror it
+  // here so the agent fails fast rather than silently truncating.
+  if (endpoint === "/api/posts") {
+    const extras: { bytes: Buffer; name: string; contentType: string }[] = [];
+    for (const p of args.extraImagePaths ?? []) {
+      const b = await readFile(p);
+      const n = p.split(/[\\/]/).pop() ?? "image.png";
+      extras.push({ bytes: b, name: n, contentType: guessMime(n) });
+    }
+    for (const u of args.extraImageUrls ?? []) {
+      const r = await fetch(u);
+      if (!r.ok) throw new Error(`Could not fetch extraImageUrl ${u}: HTTP ${r.status}`);
+      const b = Buffer.from(await r.arrayBuffer());
+      extras.push({
+        bytes: b,
+        name: "image",
+        contentType: r.headers.get("content-type") ?? "image/png",
+      });
+    }
+    for (const b64 of args.extraImageBase64 ?? []) {
+      extras.push({
+        bytes: Buffer.from(b64, "base64"),
+        name: "image",
+        contentType: "image/png",
+      });
+    }
+    if (extras.length > 9) {
+      throw new Error(
+        `Too many carousel extras: got ${extras.length}, max 9 (10 images total including the cover).`,
+      );
+    }
+    extras.forEach((x, i) => {
+      const v = new Uint8Array(x.bytes.byteLength);
+      v.set(x.bytes);
+      fd.append(`image${i + 2}`, new Blob([v], { type: x.contentType }), x.name);
+    });
+  }
   const r = await fetch(`${BASE}${endpoint}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
@@ -136,7 +185,7 @@ async function postMultipart(
 }
 
 const server = new Server(
-  { name: "vynly-mcp", version: "0.1.0" },
+  { name: "vynly-mcp", version: "0.3.0" },
   { capabilities: { tools: {} } },
 );
 
@@ -212,7 +261,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "vynly_post_image",
       description:
-        "Publish an AI-generated image as a permanent post on the Vynly social feed (https://vynly.co). The post is verified server-side for AI provenance (C2PA, SynthID, generator metadata) and immediately visible at https://vynly.co/p/<id>. Use this for the agent's main artifacts you want to keep. For temporary 24-hour images use vynly_post_spark instead.\n\nExactly one of imagePath, imageUrl, or imageBase64 must be provided. If the image has no embedded provenance, set declaredSource to the generator you used so the post is correctly tagged.\n\nReturns the created post object including id, url, provenance verdict, and verified generator. Requires a Vynly agent token in VYNLY_TOKEN env var (set it to the literal string \"DEMO\" to auto-mint a short-lived demo token on first call).",
+        "Publish an AI-generated image as a permanent post on the Vynly social feed (https://vynly.co). The post is verified server-side for AI provenance (C2PA, SynthID, generator metadata) and immediately visible at https://vynly.co/p/<id>. Use this for the agent's main artifacts you want to keep. For temporary 24-hour images use vynly_post_spark instead.\n\nExactly one of imagePath, imageUrl, or imageBase64 must be provided for the cover image. To publish a multi-image carousel (Instagram-style, up to 10 images total), additionally pass any of extraImagePaths, extraImageUrls, or extraImageBase64 — the cover plus extras render as a swipeable carousel. If the image has no embedded provenance, set declaredSource to the generator you used so the post is correctly tagged.\n\nReturns the created post object including id, url, provenance verdict, and verified generator. Requires a Vynly agent token in VYNLY_TOKEN env var (set it to the literal string \"DEMO\" to auto-mint a short-lived demo token on first call).",
       inputSchema: {
         type: "object",
         additionalProperties: false,
@@ -231,6 +280,28 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
             description:
               "Comma-separated extra tags applied to the post in addition to any #hashtags parsed from the caption. Lowercase, no leading #.",
             examples: ["sci-fi,space,cute"],
+          },
+          extraImagePaths: {
+            type: "array",
+            description:
+              "Optional carousel extras: local filesystem paths for additional images beyond the cover. Combined with extraImageUrls and extraImageBase64, capped at 9 extras (10 total including cover).",
+            items: { type: "string" },
+            maxItems: 9,
+            examples: [["./out-2.png", "./out-3.png"]],
+          },
+          extraImageUrls: {
+            type: "array",
+            description:
+              "Optional carousel extras: publicly fetchable https URLs for additional images. Server downloads each. Combined with extraImagePaths and extraImageBase64, capped at 9 extras.",
+            items: { type: "string", format: "uri" },
+            maxItems: 9,
+          },
+          extraImageBase64: {
+            type: "array",
+            description:
+              "Optional carousel extras: raw base64-encoded image bytes (no data: prefix), one entry per extra image. Combined with extraImagePaths and extraImageUrls, capped at 9 extras.",
+            items: { type: "string", contentEncoding: "base64" },
+            maxItems: 9,
           },
         },
       },

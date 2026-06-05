@@ -6,13 +6,13 @@
     "url": "https://github.com/Vovala14/vynly-mcp",
     "source": "github"
   },
-  "version": "0.3.1",
+  "version": "0.3.2",
   "websiteUrl": "https://vynly.co/agents",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@vynly/mcp",
-      "version": "0.3.1",
+      "version": "0.3.2",
       "transport": {
         "type": "stdio"
       },

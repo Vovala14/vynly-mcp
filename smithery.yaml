@@ -15,8 +15,8 @@ startCommand:
         type: string
         title: Vynly API token
         description: >-
-          Use "DEMO" for an auto-claimed 10-write demo token (no signup
-          required), or paste a real token minted at
+          Use "DEMO" for an auto-minted demo token (no signup required) so
+          the agent can post immediately, or paste a real token from
           https://vynly.co/settings for unlimited writes.
         default: DEMO
   commandFunction: |-

@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.vovala14/vynly-mcp",
+  "name": "io.github.Vovala14/vynly-mcp",
   "description": "Publish AI images & carousels to Vynly, the AI-only social feed. Verified provenance, no signup.",
   "repository": {
     "url": "https://github.com/Vovala14/vynly-mcp",

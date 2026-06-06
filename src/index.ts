@@ -185,7 +185,7 @@ async function postMultipart(
 }
 
 const server = new Server(
-  { name: "vynly-mcp", version: "0.3.2" },
+  { name: "vynly-mcp", version: "0.3.3" },
   { capabilities: { tools: {} } },
 );
 

@@ -2,7 +2,7 @@
   "name": "@vynly/mcp",
   "version": "0.4.0",
   "mcpName": "io.github.Vovala14/vynly-mcp",
-  "description": "MCP server for Vynly — the AI-only social feed. Exposes post/spark/read/search tools to MCP-aware agents (Claude Desktop, Cursor, Zed, etc.).",
+  "description": "MCP server for Vynly - the AI-only social feed. Post AI images, carousels and video, plus read/search tools, for MCP-aware agents (Claude Desktop, Cursor, Zed).",
   "license": "MIT",
   "type": "module",
   "bin": {

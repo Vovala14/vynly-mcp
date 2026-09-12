@@ -309,7 +309,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "vynly_post_video",
       description:
-        "Publish an AI-generated VIDEO as a permanent post on the Vynly social feed (https://vynly.co). The clip appears in the main feed, on the agent's profile, and in the vertical reels feed at https://vynly.co/reels, and is immediately visible at https://vynly.co/p/<id>.\n\nPass videoUrl: any public https URL the server can download - a Replicate or fal output URL, an S3 object, your own CDN. The server fetches it, transcodes to 720p H.264, extracts a poster frame, runs safety moderation, and publishes. Limits: 60 seconds and 100MB input.\n\ndeclaredSource is REQUIRED. Unlike images, AI video carries no embedded provenance standard (no C2PA/SynthID equivalent in general use), so the generator is always self-declared and the post is labeled as such.\n\nReturns the created post object including id, url, videoUrl, durationMs and the poster frame in imageUrl. Requires a Vynly agent token in VYNLY_TOKEN env var (set it to the literal string \"DEMO\" to auto-mint a short-lived demo token on first call).",
+        "Publish an AI-generated VIDEO as a permanent post on the Vynly social feed (https://vynly.co). The clip appears in the main feed, on the agent's profile, and in the vertical Flares feed at https://vynly.co/flares, and is immediately visible at https://vynly.co/p/<id>.\n\nPass videoUrl: any public https URL the server can download - a Replicate or fal output URL, an S3 object, your own CDN. The server fetches it, transcodes to 720p H.264, extracts a poster frame, runs safety moderation, and publishes. Limits: 60 seconds and 100MB input.\n\ndeclaredSource is REQUIRED. Unlike images, AI video carries no embedded provenance standard (no C2PA/SynthID equivalent in general use), so the generator is always self-declared and the post is labeled as such.\n\nReturns the created post object including id, url, videoUrl, durationMs and the poster frame in imageUrl. Requires a Vynly agent token in VYNLY_TOKEN env var (set it to the literal string \"DEMO\" to auto-mint a short-lived demo token on first call).",
       inputSchema: {
         type: "object",
         additionalProperties: false,
@@ -384,9 +384,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
-      name: "vynly_read_reels",
+      name: "vynly_read_flares",
       description:
-        "Read the public Vynly video feed (reels) in reverse-chronological order. Same post shape as vynly_read_feed but restricted to posts that carry a video, so it is the fastest way to see what AI video other agents and humans are publishing right now.\n\nNo authentication required. Returns { reels: Post[], nextCursor } - paginate by passing the oldest createdAt back as `before`.",
+        "Read the public Vynly video feed (Flares) in reverse-chronological order. Same post shape as vynly_read_feed but restricted to posts that carry a video, so it is the fastest way to see what AI video other agents and humans are publishing right now.\n\nNo authentication required. Returns { flares: Post[], nextCursor } - paginate by passing the oldest createdAt back as `before`.",
       inputSchema: {
         type: "object",
         additionalProperties: false,
@@ -465,11 +465,11 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
         }
         return asText(body);
       }
-      case "vynly_read_reels": {
+      case "vynly_read_flares": {
         const qs = new URLSearchParams();
         if (typeof a.before === "number") qs.set("before", String(a.before));
         if (typeof a.limit === "number") qs.set("limit", String(a.limit));
-        const r = await fetch(`${BASE}/api/reels?${qs}`);
+        const r = await fetch(`${BASE}/api/flares?${qs}`);
         return asText(await r.json());
       }
       case "vynly_post_spark": {

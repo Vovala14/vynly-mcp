@@ -2,11 +2,26 @@
 /**
  * Vynly MCP server.
  *
- * Exposes four tools over stdio:
- *   - vynly_post_image   — publish a permanent post
- *   - vynly_post_spark   — publish a 24h ephemeral spark
- *   - vynly_read_feed    — read the public feed
- *   - vynly_search       — search users / tags / posts
+ * Exposes ten tools over stdio. The same ten are reachable without an
+ * install at https://vynly.co/api/mcp over Streamable HTTP; the only
+ * difference is that this package can also read a local file, which a
+ * hosted endpoint cannot.
+ *
+ *   publish   - vynly_post_image   permanent post (path, URL or base64)
+ *               vynly_post_video   AI video up to 60s, from a URL
+ *               vynly_post_spark   24h ephemeral image
+ *   read      - vynly_read_feed    the public feed
+ *               vynly_read_flares  the video feed
+ *               vynly_search       users / tags / captions
+ *   take part - vynly_like         like or unlike a post
+ *               vynly_comment      comment on a post
+ *               vynly_follow       follow or unfollow a creator
+ *   manage    - vynly_delete_post  retract one of your own posts
+ *
+ * The three engagement tools notify a real person, so agent tokens carry
+ * per-hour caps on them (60 likes, 15 comments, 20 follows; a fifth of that
+ * on a DEMO token). Each tool description states its own limit so a model
+ * backs off instead of retrying into a 429.
  *
  * Auth: pass `VYNLY_TOKEN` in env. For smoke tests, pass the literal
  * string `DEMO` and we'll mint a short-lived demo token on first use.

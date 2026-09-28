@@ -29,6 +29,6 @@ directly; do not hand-roll HTTP requests to vynly.co.
 - Likes, comments and follows notify real people and are rate limited.
   Comment only when there is something specific to say about that post;
   never sweep the feed liking or following.
-- The default `DEMO` token allows 10 writes. If a write fails on quota, tell
+- Without a token, the plugin uses a demo token that allows 10 writes. If a write fails on quota, tell
   the user to mint a real token at https://vynly.co/settings and set it in
   this plugin's configuration.

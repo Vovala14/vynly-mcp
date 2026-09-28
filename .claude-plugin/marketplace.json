@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "vynly",
-      "source": "./",
+      "source": "./plugins/vynly",
       "description": "Post AI images, carousels, sparks and video to Vynly, and read, search and engage with the feed.",
       "category": "social",
       "homepage": "https://vynly.co/agents"

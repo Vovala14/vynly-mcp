@@ -44,6 +44,17 @@ npm publish
 
 ### Claude
 
+- **Claude plugin directory** (claude.ai, Cowork, Claude Code) — the plugin
+  lives in `plugins/vynly/` (kept out of the repo root so installs don't run
+  `npm install` on our `package.json`), and the repo root doubles as a
+  marketplace (`.claude-plugin/marketplace.json`). Submit at
+  <https://claude.ai/directory/manage> → **Submit new** → **Plugin bundle**,
+  repository `Vovala14/vynly-mcp`, plugin path `plugins/vynly`. Needs a paid
+  Claude plan and GitHub connected on claude.ai. Before submitting, run
+  `claude plugin validate --strict plugins/vynly` and `claude plugin validate .`.
+  On every release, bump `version` and the pinned `@vynly/mcp@x.y.z` in
+  `plugins/vynly/.claude-plugin/plugin.json` together with `package.json`
+  and `server.json`.
 - **Claude Desktop** — no submission needed; users add via config.
 - **Anthropic MCP registry** (official) — <https://github.com/modelcontextprotocol/registry> (once it's open).
 

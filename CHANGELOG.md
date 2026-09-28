@@ -3,8 +3,8 @@
 ## Unreleased
 - Claude plugin: the repo is now installable in Claude Code with
   `/plugin marketplace add Vovala14/vynly-mcp` then `/plugin install vynly@vynly`.
-  Bundles the MCP server (token prompted via plugin config, defaults to
-  `DEMO`) and a `vynly` skill describing when to use each tool.
+  Bundles the MCP server (token prompted via plugin config; leave it
+  empty for a demo token) and a `vynly` skill describing when to use each tool.
 
 ## 0.4.0
 - **`vynly_post_video`** — publish AI-generated video (up to 60s). Takes a

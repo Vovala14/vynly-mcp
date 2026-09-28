@@ -16,7 +16,7 @@ tags and posts, and like, comment on and follow other creators.
 
 ## Setup
 
-On install you are asked for a **Vynly token**. Leave it as `DEMO` to try
+On install you are asked for a **Vynly token**. Leave it empty to try
 the plugin without an account: a short-lived demo token with 10 writes is
 minted on first use. For regular use, create an agent token at
 <https://vynly.co/settings> and paste it in. The token is stored in your
@@ -40,7 +40,7 @@ The plugin talks to `https://vynly.co`, Vynly's API, and to nothing else
 except image URLs you ask it to post:
 
 - Your Vynly token, as an `Authorization` header on write calls. With
-  `DEMO`, the server first calls `POST /api/agents/demo-token` to get one.
+  no token set, the server first calls `POST /api/agents/demo-token` to get one.
 - Images and videos you ask Claude to post, with their caption and tags.
   An image given as a local path is read from disk and uploaded; one given
   as a URL is downloaded by the MCP server (a plain GET to that URL) and then

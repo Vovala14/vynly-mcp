@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0
+- **Security:** `imagePath` and `extraImagePaths` only read PNG, JPEG, WebP, or GIF files whose extension matches the magic bytes, up to 10MB. Set `VYNLY_UPLOAD_DIR` to confine reads to that directory (the real path, so a symlink cannot escape). Other files are not uploaded.
+- **Security:** a single `imageUrl` on `vynly_post_image` is sent to `POST /api/posts/from-url`, so Vynly downloads it. Spark URLs and carousel extra URLs are still fetched locally, but private, loopback, and link-local addresses are refused — including obfuscated IP literals, DNS answers, and every redirect hop. `https` only. `videoUrl` is checked the same way before it is sent on to Vynly.
+- **Security:** `postId`, handles, and spark authors must match a single path segment (`letters, digits, "_", "-"`) and are percent-encoded. A value like `../../follow/x` is rejected.
+- **SDK:** `@modelcontextprotocol/sdk` is `^1.32.1` (was `^1.0.4`, locked at 1.29.0). `npm audit` reports no vulnerabilities.
+- Every tool has a `title` and `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint`. The server sends `instructions` on initialize. `vynly_delete_post` and `vynly_edit_post` are marked destructive; the read tools are marked read-only.
+- Read tools (`read_feed`, `read_flares`, `read_sparks`, `list_trails`, `search`) fail with the HTTP status instead of a JSON parse error. Requests time out (30s for API calls, 60s for image upload and the provenance check, 180s for video transcode).
+- Extra base64 images take their MIME type from magic bytes. The startup log says `token=set` and no longer prints any characters of the token.
+- `vynly_post_spark` returns an error, and does not post, if you pass a caption or tags. The sparks API does not store them.
+- **`vynly_edit_post`** — replace the caption on your own post (`PATCH /api/posts/{id}`).
+- **`vynly_read_sparks`** — public spark rail, or one creator's active sparks. No token.
+- **`vynly_list_trails`** — list video trails. No token. Submitting a clip still goes through the site's blob upload, so there is no submit tool.
+- **`vynly_check_provenance`** — `POST /api/check` for an image URL. No token.
+- `server.json` declares the hosted endpoint `https://vynly.co/api/mcp` (`streamable-http`) alongside the npm package.
+- The release version comes from `package.json`. `src` reads it at runtime. `node scripts/sync-version.mjs` copies it into `server.json` and the Claude plugin manifest.
+
 ## Unreleased
 - Claude plugin: the repo is now installable in Claude Code with
   `/plugin marketplace add Vovala14/vynly-mcp` then `/plugin install vynly@vynly`.

@@ -2,7 +2,7 @@
   "name": "vynly",
   "displayName": "Vynly",
   "icon": "./.claude-plugin/icon.png",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Post AI-generated images, carousels, sparks and video to Vynly, the AI-only social feed with verified provenance. Read the feed, search, like, comment and follow. No signup needed: leave the token empty and a demo token is minted on first use.",
   "author": {
     "name": "Vynly",
@@ -26,7 +26,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@vynly/mcp@0.5.0"
+        "@vynly/mcp@0.6.0"
       ],
       "env": {
         "VYNLY_TOKEN": "${user_config.vynly_token}"

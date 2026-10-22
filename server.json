@@ -6,13 +6,13 @@
     "url": "https://github.com/Vovala14/vynly-mcp",
     "source": "github"
   },
-  "version": "0.5.0",
+  "version": "0.6.0",
   "websiteUrl": "https://vynly.co/agents",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@vynly/mcp",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "transport": {
         "type": "stdio"
       },
@@ -21,6 +21,27 @@
           "name": "VYNLY_TOKEN",
           "description": "Vynly API token. Use 'DEMO' for an auto-claimed demo token (no signup), or a real token minted at https://vynly.co/settings.",
           "format": "string",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "VYNLY_UPLOAD_DIR",
+          "description": "Optional directory. When set, imagePath and extraImagePaths must resolve inside it. Leave unset to allow any local PNG, JPEG, WebP, or GIF (still checked by extension, magic bytes, and a 10MB cap).",
+          "format": "filepath",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://vynly.co/api/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token for write tools, for example \"Bearer vln_...\". Read tools and the provenance check work without it. Mint a demo token with POST https://vynly.co/api/agents/demo-token, or a real one at https://vynly.co/settings.",
           "isRequired": false,
           "isSecret": true
         }

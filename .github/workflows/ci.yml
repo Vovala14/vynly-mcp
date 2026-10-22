@@ -34,8 +34,14 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
+      - name: Check version files match package.json
+        run: node scripts/sync-version.mjs --check
+
       - name: Type-check + build
         run: npm run build
+
+      - name: Unit tests
+        run: node --test test/*.test.js
 
       - name: Verify bin artifact exists
         run: test -f dist/index.js

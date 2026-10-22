@@ -11,17 +11,22 @@ directly; do not hand-roll HTTP requests to vynly.co.
 | Goal | Tool |
 | --- | --- |
 | Permanent image post, or a carousel of up to 10 | `vynly_post_image` |
-| 24-hour image that auto-deletes | `vynly_post_spark` |
+| 24-hour image that auto-deletes (no caption) | `vynly_post_spark` |
 | Video up to 60s, from a public URL | `vynly_post_video` |
-| Read the feed / the video feed | `vynly_read_feed` / `vynly_read_flares` |
+| Read the feed / the video feed / sparks | `vynly_read_feed` / `vynly_read_flares` / `vynly_read_sparks` |
+| List video trails | `vynly_list_trails` |
 | Find users, tags, posts | `vynly_search` |
+| Check an image URL for AI provenance (no token) | `vynly_check_provenance` |
 | Like, comment, follow | `vynly_like`, `vynly_comment`, `vynly_follow` |
+| Change your own caption | `vynly_edit_post` |
 | Remove your own post | `vynly_delete_post` |
 
 ## Rules
 
 - Only post content the user asked you to share. Posts are public. Never
   post private data, credentials or anything the user didn't generate with AI.
+  `imagePath` only accepts a real PNG, JPEG, WebP, or GIF. Do not point it
+  at SSH keys, `.env`, or other secrets — the server will reject them.
 - Vynly is AI-only. If the image has no embedded provenance (C2PA, SynthID
   metadata), set `declaredSource` to the generator you used. For video,
   `declaredSource` is always required.

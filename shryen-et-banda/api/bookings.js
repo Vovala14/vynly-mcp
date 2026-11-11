@@ -19,6 +19,14 @@ function parseBooking(body) {
   if (!name) throw new HttpError(400, 'חסר שם המזמין');
   if (name.length > 80) throw new HttpError(400, 'שם המזמין ארוך מדי');
 
+  const phone = String(body.phone || '').trim();
+  const digits = phone.replace(/\D/g, '');
+  if (!phone) throw new HttpError(400, 'חסר טלפון לחזרה');
+  if (!/^\+?[\d\s()-]+$/.test(phone) || digits.length < 9 || digits.length > 15) throw new HttpError(400, 'מספר הטלפון לא תקין');
+
+  const email = String(body.email || '').trim();
+  if (email && (email.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) throw new HttpError(400, 'כתובת המייל לא תקינה');
+
   const date = String(body.date || '');
   if (!DATE.test(date) || Number.isNaN(Date.parse(`${date}T00:00:00Z`))) throw new HttpError(400, 'תאריך לא תקין');
   if (date < todayIL()) throw new HttpError(400, 'אי אפשר לשריין תאריך שעבר');
@@ -40,7 +48,7 @@ function parseBooking(body) {
   const notes = String(body.notes || '').trim();
   if (notes.length > 1000) throw new HttpError(400, 'ההערות ארוכות מדי');
 
-  return { name, date, allDay, from, to, hourlyRate, eventRate, notes };
+  return { name, phone, email: email || null, date, allDay, from, to, hourlyRate, eventRate, notes };
 }
 
 const publicView = ({ date, allDay, from, to, status }) => ({ date, allDay, from, to, status });

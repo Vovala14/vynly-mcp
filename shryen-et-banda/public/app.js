@@ -73,9 +73,9 @@ async function load() {
 }
 
 function openForm(date) {
-  const keepName = form.elements.name.value;
+  const keep = ['name', 'phone', 'email'].map((k) => [k, form.elements[k].value]);
   form.reset();
-  form.elements.name.value = keepName;
+  for (const [k, v] of keep) form.elements[k].value = v;
   form.elements.date.value = date;
   form.elements.date.min = today;
   $('dlgSub').textContent = prettyDate(date);
@@ -107,6 +107,8 @@ form.addEventListener('submit', async (e) => {
 
   const body = {
     name: f.name.value.trim(),
+    phone: f.phone.value.trim(),
+    email: f.email.value.trim(),
     date: f.date.value,
     allDay: f.allDay.checked,
     from: f.from.value,
@@ -117,6 +119,10 @@ form.addEventListener('submit', async (e) => {
     website: f.website.value,
   };
   if (!body.name) return fail('איך קוראים לך? חסר שם המזמין.', f.name);
+  const digits = body.phone.replace(/\D/g, '');
+  if (!body.phone) return fail('חסר טלפון לחזרה.', f.phone);
+  if (!/^\+?[\d\s()-]+$/.test(body.phone) || digits.length < 9 || digits.length > 15) return fail('מספר הטלפון לא תקין.', f.phone);
+  if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) return fail('כתובת המייל לא תקינה.', f.email);
   if (!body.date) return fail('חסר תאריך.', f.date);
   if (body.date < today) return fail('אי אפשר לשריין תאריך שעבר.', f.date);
   if (!body.allDay) {

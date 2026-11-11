@@ -154,7 +154,7 @@ h1 em { font-style: normal; color: var(--accent); }
 /* ---------- buttons & forms ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 46px; padding: 0 20px; border-radius: 14px; border: 1px solid transparent;
+  min-height: 46px; padding: 0 20px; border-radius: 14px; border: 1px solid transparent; text-decoration: none;
   font-weight: 600; transition: transform .15s, filter .15s, background .15s;
 }
 .btn:active:not(:disabled) { transform: scale(.97); }

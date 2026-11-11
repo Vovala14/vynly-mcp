@@ -15,7 +15,10 @@
   <main class="wrap">
     <div class="topbar">
       <a class="brand" href="/">שריין את <em>בנדה</em></a>
-      <button class="btn ghost sm" id="logoutBtn" type="button" hidden>יציאה</button>
+      <div class="actions">
+        <button class="btn ghost sm" id="syncBtn" type="button" hidden>סנכרון ליומן</button>
+        <button class="btn ghost sm" id="logoutBtn" type="button" hidden>יציאה</button>
+      </div>
     </div>
 
     <form class="card form login" id="login" hidden>
@@ -33,6 +36,29 @@
       <div class="list" id="list" aria-live="polite"></div>
     </section>
   </main>
+  <dialog id="syncDlg" aria-labelledby="syncTitle">
+    <div class="form">
+      <div class="form-head">
+        <div>
+          <h2 id="syncTitle">סנכרון ליומן אפל</h2>
+          <p>שריונים שאישרת יופיעו ביומן שלך ויתעדכנו לבד.</p>
+        </div>
+        <button class="icon-btn" type="button" id="syncClose" aria-label="סגירה">✕</button>
+      </div>
+      <a class="btn primary" id="syncLink" href="#">הוסף ליומן שלי</a>
+      <ol class="steps">
+        <li>לוחצים על הכפתור מהאייפון או מהמק, ומאשרים "הרשמה" (Subscribe).</li>
+        <li>בהגדרות היומן שנוסף כדאי לבחור רענון אוטומטי כל 5 או 15 דקות.</li>
+        <li>ביטלת אישור או מחקת שריון? הוא ייעלם מהיומן ברענון הבא.</li>
+      </ol>
+      <label class="field">
+        <span>או להעתיק את הקישור <small>· ליומן גוגל / Outlook</small></span>
+        <input class="input" id="syncUrl" dir="ltr" readonly>
+      </label>
+      <button class="btn ghost" type="button" id="syncCopy">העתק קישור</button>
+      <p class="hint">הקישור אישי וסודי: מי שמחזיק בו רואה את כל השריונים המאושרים. החלפת סיסמת הניהול מבטלת אותו.</p>
+    </div>
+  </dialog>
   <div class="toast" id="toast" role="status"></div>
   <script type="module" src="/admin.js"></script>
 </body>

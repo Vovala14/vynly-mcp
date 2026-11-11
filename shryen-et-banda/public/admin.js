@@ -10,6 +10,7 @@ const TABS = [
 
 let password = sessionStorage.getItem(PW_KEY) || '';
 let bookings = [];
+let calendarToken = null;
 let tab = 'pending';
 let toastTimer;
 
@@ -23,6 +24,7 @@ function show(loggedIn) {
   $('login').hidden = loggedIn;
   $('panel').hidden = !loggedIn;
   $('logoutBtn').hidden = !loggedIn;
+  $('syncBtn').hidden = !loggedIn;
 }
 
 function logout() {
@@ -34,6 +36,7 @@ function logout() {
 async function load() {
   const data = await api('/api/bookings?admin', { password });
   bookings = data.bookings;
+  calendarToken = data.calendarToken;
   render();
 }
 
@@ -106,6 +109,26 @@ $('login').addEventListener('submit', async (e) => {
   }
 });
 $('logoutBtn').addEventListener('click', logout);
+
+const syncDlg = $('syncDlg');
+$('syncBtn').addEventListener('click', () => {
+  const path = `${location.host}/api/calendar?token=${calendarToken}`;
+  $('syncLink').href = `webcal://${path}`;
+  $('syncUrl').value = `${location.protocol}//${path}`;
+  syncDlg.showModal();
+});
+$('syncClose').addEventListener('click', () => syncDlg.close());
+syncDlg.addEventListener('click', (e) => { if (e.target === syncDlg) syncDlg.close(); });
+$('syncUrl').addEventListener('focus', (e) => e.target.select());
+$('syncCopy').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText($('syncUrl').value);
+    toast('הקישור הועתק');
+  } catch {
+    $('syncUrl').select();
+    toast('סמנו את הקישור והעתיקו ידנית');
+  }
+});
 
 if (password) {
   load().then(() => show(true)).catch(logout);

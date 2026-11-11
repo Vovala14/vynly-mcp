@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { listBookings, mutate } from '../lib/store.js';
-import { HttpError, requireAdmin, overlaps, todayIL, wrap } from '../lib/util.js';
+import { HttpError, calendarToken, requireAdmin, overlaps, todayIL, wrap } from '../lib/util.js';
 
 const MAX_BOOKINGS = 3000;
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -58,7 +58,7 @@ export default wrap(async (req, res) => {
     const all = await listBookings();
     if (req.query.admin !== undefined) {
       requireAdmin(req);
-      return res.json({ bookings: all });
+      return res.json({ bookings: all, calendarToken: calendarToken() });
     }
     // Visitors see only when Banda is taken, never who booked or for how much.
     const ids = String(req.query.ids || '').split(',').filter(Boolean).slice(0, 50);

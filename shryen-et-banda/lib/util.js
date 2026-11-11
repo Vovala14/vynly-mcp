@@ -1,4 +1,4 @@
-import { timingSafeEqual, createHash } from 'node:crypto';
+import { timingSafeEqual, createHash, createHmac } from 'node:crypto';
 
 export class HttpError extends Error {
   constructor(status, message) {
@@ -10,10 +10,23 @@ export class HttpError extends Error {
 function isAdmin(req) {
   const expected = process.env.ADMIN_PASSWORD;
   if (!expected) return false;
-  const given = String(req.headers['x-admin-password'] || '');
+  return safeEqual(String(req.headers['x-admin-password'] || ''), expected);
+}
+
+export function safeEqual(given, expected) {
   const a = createHash('sha256').update(given).digest();
   const b = createHash('sha256').update(expected).digest();
   return timingSafeEqual(a, b);
+}
+
+/**
+ * Secret for the calendar feed URL. Derived from the admin password, so it
+ * needs no extra configuration and changing the password revokes old links.
+ */
+export function calendarToken() {
+  const password = process.env.ADMIN_PASSWORD;
+  if (!password) return null;
+  return createHmac('sha256', password).update('calendar-feed').digest('hex').slice(0, 40);
 }
 
 export function requireAdmin(req) {

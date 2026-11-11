@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ניהול · שריין את בנדה</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23ff4d1c'/><text x='50' y='72' font-size='62' font-weight='700' text-anchor='middle' fill='white' font-family='sans-serif'>ב</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="brand" href="/">שריין את <em>בנדה</em></a>
+      <button class="btn ghost sm" id="logoutBtn" type="button" hidden>יציאה</button>
+    </div>
+
+    <form class="card form login" id="login" hidden>
+      <div class="form-head"><div><h2>שלום בנדה</h2><p>הסיסמה שלך, ונכנסים לבקשות.</p></div></div>
+      <label class="field">
+        <span>סיסמה</span>
+        <input class="input" type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <p class="error" id="loginError" role="alert"></p>
+      <button class="btn primary" type="submit" id="loginBtn">כניסה</button>
+    </form>
+
+    <section id="panel" hidden>
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="list" id="list" aria-live="polite"></div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>

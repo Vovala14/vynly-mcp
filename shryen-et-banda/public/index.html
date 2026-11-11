@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>שריין את בנדה</title>
+  <meta name="description" content="בוחרים יום ביומן, שולחים הצעה, ובנדה מאשר.">
+  <meta name="theme-color" content="#ff4d1c">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23ff4d1c'/><text x='50' y='72' font-size='62' font-weight='700' text-anchor='middle' fill='white' font-family='sans-serif'>ב</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karantina:wght@700&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <span class="eyebrow"><i></i> היומן פתוח לשריונים</span>
+      <h1>שריין את <em>בנדה</em></h1>
+      <p class="lede">בוחרים יום ביומן, ממלאים הצעה, ובנדה מחזיר תשובה. פשוט ככה.</p>
+    </header>
+
+    <section class="card cal" aria-label="יומן">
+      <div class="cal-head">
+        <h2 class="cal-title" id="calTitle" aria-live="polite"></h2>
+        <div class="nav">
+          <button class="text-btn" id="todayBtn" type="button">היום</button>
+          <button class="icon-btn" id="prevBtn" type="button" aria-label="החודש הקודם">→</button>
+          <button class="icon-btn" id="nextBtn" type="button" aria-label="החודש הבא">←</button>
+        </div>
+      </div>
+      <div class="dow" aria-hidden="true">
+        <span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="legend">
+        <span><i class="l-free"></i> פנוי</span>
+        <span><i class="l-wait"></i> יש בקשה שממתינה</span>
+        <span><i class="l-ok"></i> משוריין</span>
+      </div>
+    </section>
+
+    <section id="mineSection" hidden>
+      <h2 class="section-title">הבקשות שלי</h2>
+      <div class="list" id="mine"></div>
+    </section>
+
+    <p class="foot">בנדה? <a href="/admin">כניסה לניהול</a></p>
+  </main>
+
+  <dialog id="dlg" aria-labelledby="dlgTitle">
+    <form class="form" id="form" novalidate>
+      <div class="form-head">
+        <div>
+          <h2 id="dlgTitle">שריון חדש</h2>
+          <p id="dlgSub"></p>
+        </div>
+        <button class="icon-btn" type="button" id="closeBtn" aria-label="סגירה">✕</button>
+      </div>
+
+      <label class="field">
+        <span>שם המזמין</span>
+        <input class="input" name="name" autocomplete="name" maxlength="80" required>
+      </label>
+
+      <label class="field">
+        <span>תאריך</span>
+        <input class="input" type="date" name="date" required>
+      </label>
+
+      <fieldset id="timeBox">
+        <legend>שעות</legend>
+        <label class="switch"><input type="checkbox" name="allDay"> כל היום</label>
+        <div class="row" id="timeRow">
+          <label class="field"><span>מ־</span><input class="input" type="time" name="from" value="09:00"></label>
+          <label class="field"><span>עד</span><input class="input" type="time" name="to" value="17:00"></label>
+        </div>
+      </fieldset>
+
+      <fieldset id="payBox">
+        <legend>שכר <span class="hint">· חובה למלא לפחות אחד</span></legend>
+        <div class="row">
+          <label class="field"><span>שכר שעתי</span>
+            <span class="money"><input class="input" name="hourlyRate" type="number" inputmode="decimal" min="1" step="any" placeholder="0"></span>
+          </label>
+          <label class="field"><span>שכר פר אירוע</span>
+            <span class="money"><input class="input" name="eventRate" type="number" inputmode="decimal" min="1" step="any" placeholder="0"></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <label class="field">
+        <span>הערות <small>· לא חובה</small></span>
+        <textarea class="input" name="notes" maxlength="1000" placeholder="מה העבודה, איפה, מה צריך להביא…"></textarea>
+      </label>
+
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="error" id="formError" role="alert"></p>
+      <button class="btn primary" id="submitBtn" type="submit">שלח בקשה לבנדה</button>
+    </form>
+    <div class="done" id="done" hidden>
+      <div class="big" aria-hidden="true">🤝</div>
+      <h2>הבקשה נשלחה</h2>
+      <p id="doneText"></p>
+      <button class="btn primary" type="button" id="doneBtn">סגור</button>
+    </div>
+  </dialog>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

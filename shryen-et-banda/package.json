@@ -1,0 +1,11 @@
+{
+  "name": "shryen-et-banda",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "שריין את בנדה - booking calendar with an admin approval page",
+  "engines": { "node": "22.x" },
+  "dependencies": {
+    "@vercel/blob": "^2.9.0"
+  }
+}
